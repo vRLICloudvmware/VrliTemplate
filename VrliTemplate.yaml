@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: "Sends AWS logs to vRLI Cloud using a Lambda function."
+Parameters:
+    NameOfFunction:
+        Type: "String"
+        Description: "Enter name of function"
+        Default: ""
+    LogIntelligenceAPIUrl:
+        Type: "String"
+        Description: "Url"
+        Default: ""
+
+    LogIntelligenceAPIToken:
+        Type: "String"
+        Description: "APi key "
+        Default: ""
+Outputs:
+    awslogstovrlicloud:
+      Description: "Vrli Cloud logs"
+      Value: !GetAtt awslogstovrlicloud.Arn
+Resources:
+  awslogstovrlicloud:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Runtime: nodejs12.x
+      Handler: index.handler
+      CodeUri:  s3://cloudformation-deply/Lambda.zip
+      FunctionName: !Ref NameOfFunction
+      MemorySize: 512
+      Timeout: 60
+      Environment:
+        Variables:
+            LogIntelligence_API_Token: !Ref LogIntelligenceAPIToken
+            LogIntelligence_API_Url: !Ref LogIntelligenceAPIUrl
